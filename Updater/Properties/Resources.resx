@@ -123,11 +123,20 @@
   <data name="ErrorFileInfoNotExists" xml:space="preserve">
     <value>Файл с настройками не существует.</value>
   </data>
+  <data name="ExceptionFileNotFoundInArchive" xml:space="preserve">
+    <value>file not found in archive</value>
+  </data>
   <data name="GitHubApiUrl" xml:space="preserve">
     <value>https://api.github.com</value>
   </data>
   <data name="GitHubUrl" xml:space="preserve">
     <value>https://github.com</value>
+  </data>
+  <data name="QuestionClosing" xml:space="preserve">
+    <value>Прервать текущую операцию и закрыть программу?</value>
+  </data>
+  <data name="TextBtnCheck" xml:space="preserve">
+    <value>Проверить</value>
   </data>
   <data name="TextBtnInstall" xml:space="preserve">
     <value>Установить</value>
@@ -135,10 +144,19 @@
   <data name="TextBtnUpdate" xml:space="preserve">
     <value>Обновить</value>
   </data>
-  <data name="TextLocalNotExists" xml:space="preserve">
+  <data name="TextVersionDownloading" xml:space="preserve">
+    <value>загрузка...</value>
+  </data>
+  <data name="TextVersionError" xml:space="preserve">
+    <value>ошибка</value>
+  </data>
+  <data name="TextVersionNotExists" xml:space="preserve">
     <value>нет</value>
   </data>
-  <data name="TextReadingVersion" xml:space="preserve">
+  <data name="TextVersionReading" xml:space="preserve">
     <value>чтение...</value>
+  </data>
+  <data name="TextVersionZipExtracting" xml:space="preserve">
+    <value>распаковка...</value>
   </data>
 </root>

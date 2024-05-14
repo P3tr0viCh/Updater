@@ -79,6 +79,15 @@ namespace Updater.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to file not found in archive.
+        /// </summary>
+        internal static string ExceptionFileNotFoundInArchive {
+            get {
+                return ResourceManager.GetString("ExceptionFileNotFoundInArchive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://api.github.com.
         /// </summary>
         internal static string GitHubApiUrl {
@@ -93,6 +102,24 @@ namespace Updater.Properties {
         internal static string GitHubUrl {
             get {
                 return ResourceManager.GetString("GitHubUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Прервать текущую операцию и закрыть программу?.
+        /// </summary>
+        internal static string QuestionClosing {
+            get {
+                return ResourceManager.GetString("QuestionClosing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Проверить.
+        /// </summary>
+        internal static string TextBtnCheck {
+            get {
+                return ResourceManager.GetString("TextBtnCheck", resourceCulture);
             }
         }
         
@@ -115,20 +142,47 @@ namespace Updater.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to загрузка....
+        /// </summary>
+        internal static string TextVersionDownloading {
+            get {
+                return ResourceManager.GetString("TextVersionDownloading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ошибка.
+        /// </summary>
+        internal static string TextVersionError {
+            get {
+                return ResourceManager.GetString("TextVersionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to нет.
         /// </summary>
-        internal static string TextLocalNotExists {
+        internal static string TextVersionNotExists {
             get {
-                return ResourceManager.GetString("TextLocalNotExists", resourceCulture);
+                return ResourceManager.GetString("TextVersionNotExists", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to чтение....
         /// </summary>
-        internal static string TextReadingVersion {
+        internal static string TextVersionReading {
             get {
-                return ResourceManager.GetString("TextReadingVersion", resourceCulture);
+                return ResourceManager.GetString("TextVersionReading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to распаковка....
+        /// </summary>
+        internal static string TextVersionZipExtracting {
+            get {
+                return ResourceManager.GetString("TextVersionZipExtracting", resourceCulture);
             }
         }
     }

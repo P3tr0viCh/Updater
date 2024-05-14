@@ -28,12 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.lblLocalVersion = new System.Windows.Forms.Label();
             this.lblReleaseVersion = new System.Windows.Forms.Label();
             this.lblName = new System.Windows.Forms.Label();
             this.linkLocal = new System.Windows.Forms.LinkLabel();
             this.linkRelease = new System.Windows.Forms.LinkLabel();
-            this.btnUpdate = new System.Windows.Forms.Button();
+            this.btnOperation = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -89,14 +90,15 @@
             this.linkRelease.Text = "Последняя версия";
             this.linkRelease.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkRelease_LinkClicked);
             // 
-            // btnUpdate
+            // btnOperation
             // 
-            this.btnUpdate.Location = new System.Drawing.Point(16, 144);
-            this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(104, 32);
-            this.btnUpdate.TabIndex = 5;
-            this.btnUpdate.Text = "Update";
-            this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnOperation.Location = new System.Drawing.Point(16, 144);
+            this.btnOperation.Name = "btnOperation";
+            this.btnOperation.Size = new System.Drawing.Size(104, 32);
+            this.btnOperation.TabIndex = 5;
+            this.btnOperation.Text = "check";
+            this.btnOperation.UseVisualStyleBackColor = true;
+            this.btnOperation.Click += new System.EventHandler(this.BtnOperation_Click);
             // 
             // btnClose
             // 
@@ -114,7 +116,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(320, 193);
             this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.btnUpdate);
+            this.Controls.Add(this.btnOperation);
             this.Controls.Add(this.linkRelease);
             this.Controls.Add(this.linkLocal);
             this.Controls.Add(this.lblName);
@@ -122,11 +124,13 @@
             this.Controls.Add(this.lblLocalVersion);
             this.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Обновление";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.Load += new System.EventHandler(this.Main_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -140,7 +144,7 @@
         private System.Windows.Forms.Label lblName;
         private System.Windows.Forms.LinkLabel linkLocal;
         private System.Windows.Forms.LinkLabel linkRelease;
-        private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.Button btnOperation;
         private System.Windows.Forms.Button btnClose;
     }
 }
