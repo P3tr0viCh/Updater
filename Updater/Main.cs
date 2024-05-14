@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Updater.Properties;
@@ -57,7 +58,7 @@ namespace Updater
             lblLocalVersion.Text = string.Empty;
             lblReleaseVersion.Text = string.Empty;
 
-            Info = new Info(Files.SettingsFileName());
+            Info = new Info(Path.Combine(Files.ExecutableDirectory(), Files.SettingsFileName()));
 
             ProgramStatus.StatusChanged += ProgramStatusStatusChanged;
 
@@ -245,7 +246,11 @@ namespace Updater
             {
                 releaseVersionGitHub = await Utils.Http.CheckReleaseVersionAsync(Info.ReleaseOwner, Info.ReleaseRepo);
 
-                releaseVersion = new Version(releaseVersionGitHub);
+                var tempVersion = new Version(releaseVersionGitHub);
+
+                releaseVersion = new Version(tempVersion.Major, tempVersion.Minor,
+                    tempVersion.Build == -1 ? 0 : tempVersion.Build,
+                    tempVersion.Revision == -1 ? 0 : tempVersion.Revision);
             }
             finally
             {
@@ -300,6 +305,16 @@ namespace Updater
 
         private async void InstallOrUpdate()
         {
+            Utils.WriteDebug(releaseVersion.CompareTo(localVersion).ToString());
+
+            if (releaseVersion.CompareTo(localVersion) != 1)
+            {
+                if (!Msg.Question(Resources.QuestionVersionCompare))
+                {
+                    return;
+                }
+            }
+
             var starting = ProgramStatus.Start(Status.InstallOrUpdate);
 
             try
@@ -344,6 +359,7 @@ namespace Updater
 #if !DEBUG
                 Files.DirectoryDelete(archiveFileName);
 #endif
+                localVersion = releaseVersion;
             }
             catch (Exception e)
             {

@@ -115,6 +115,15 @@ namespace Updater.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Текущая версия уже установлена. Продолжить?.
+        /// </summary>
+        internal static string QuestionVersionCompare {
+            get {
+                return ResourceManager.GetString("QuestionVersionCompare", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Проверить.
         /// </summary>
         internal static string TextBtnCheck {

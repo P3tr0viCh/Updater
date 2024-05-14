@@ -135,6 +135,9 @@
   <data name="QuestionClosing" xml:space="preserve">
     <value>Прервать текущую операцию и закрыть программу?</value>
   </data>
+  <data name="QuestionVersionCompare" xml:space="preserve">
+    <value>Текущая версия уже установлена. Продолжить?</value>
+  </data>
   <data name="TextBtnCheck" xml:space="preserve">
     <value>Проверить</value>
   </data>
