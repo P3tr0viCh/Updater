@@ -61,20 +61,38 @@ namespace Updater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Файл с настройками повреждён..
+        ///   Looks up a localized string similar to Файл не существует..
         /// </summary>
-        internal static string ErrorFileInfoBad {
+        internal static string ErrorFileNotExists {
             get {
-                return ResourceManager.GetString("ErrorFileInfoBad", resourceCulture);
+                return ResourceManager.GetString("ErrorFileNotExists", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Файл с настройками не существует..
+        ///   Looks up a localized string similar to Не удалось сохранить файл..
         /// </summary>
-        internal static string ErrorFileInfoNotExists {
+        internal static string ErrorFileSave {
             get {
-                return ResourceManager.GetString("ErrorFileInfoNotExists", resourceCulture);
+                return ResourceManager.GetString("ErrorFileSave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Файл должен находиться в каталоге «latest»..
+        /// </summary>
+        internal static string ErrorFileWrongLocation {
+            get {
+                return ResourceManager.GetString("ErrorFileWrongLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Необходимо указать значение..
+        /// </summary>
+        internal static string ErrorValueEmpty {
+            get {
+                return ResourceManager.GetString("ErrorValueEmpty", resourceCulture);
             }
         }
         
@@ -88,20 +106,11 @@ namespace Updater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://api.github.com.
+        ///   Looks up a localized string similar to Исполняемые файлы|*.exe|Все файлы|*.*.
         /// </summary>
-        internal static string GitHubApiUrl {
+        internal static string FileOpenFilterInfo {
             get {
-                return ResourceManager.GetString("GitHubApiUrl", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to https://github.com.
-        /// </summary>
-        internal static string GitHubUrl {
-            get {
-                return ResourceManager.GetString("GitHubUrl", resourceCulture);
+                return ResourceManager.GetString("FileOpenFilterInfo", resourceCulture);
             }
         }
         
@@ -111,6 +120,15 @@ namespace Updater.Properties {
         internal static string QuestionClosing {
             get {
                 return ResourceManager.GetString("QuestionClosing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Файл с настройками повреждён или не существует. Создать новый?.
+        /// </summary>
+        internal static string QuestionFileInfoBad {
+            get {
+                return ResourceManager.GetString("QuestionFileInfoBad", resourceCulture);
             }
         }
         
@@ -147,6 +165,15 @@ namespace Updater.Properties {
         internal static string TextBtnUpdate {
             get {
                 return ResourceManager.GetString("TextBtnUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Модуль обновления.
+        /// </summary>
+        internal static string TextUpdaterName {
+            get {
+                return ResourceManager.GetString("TextUpdaterName", resourceCulture);
             }
         }
         

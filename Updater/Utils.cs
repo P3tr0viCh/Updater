@@ -8,22 +8,57 @@ namespace Updater
 {
     public static partial class Utils
     {
-        public static Version GetFileVersion(string filePath)
+        public static FileVersionInfo GetFileVersionInfo(string filePath)
         {
-            Version version = null;
+            FileVersionInfo info = null;
 
             try
             {
-                version = new Version(FileVersionInfo.GetVersionInfo(filePath).FileVersion);
+                info = FileVersionInfo.GetVersionInfo(filePath);
             }
             catch (Exception e)
             {
                 WriteError(e);
             }
 
-            WriteDebug($"file: {filePath}, version: {version}");
+            return info;
+        }
+
+        public static string GetFileTitle(FileVersionInfo info)
+        {
+            var title = string.Empty;
+
+            try
+            {
+                return info.FileDescription;
+            }
+            catch (Exception e)
+            {
+                WriteError(e);
+            }
+
+            return title;
+        }
+
+        public static Version GetFileVersion(FileVersionInfo info)
+        {
+            Version version = null;
+
+            try
+            {
+                version = new Version(info.FileVersion);
+            }
+            catch (Exception e)
+            {
+                WriteError(e);
+            }
 
             return version;
+        }
+        
+        public static Version GetFileVersion(string filePath)
+        {
+            return GetFileVersion(GetFileVersionInfo(filePath));
         }
 
         public static void WriteDebug(string s, [CallerMemberName] string memberName = "")

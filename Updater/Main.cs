@@ -2,7 +2,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Updater.Properties;
@@ -12,7 +11,7 @@ namespace Updater
 {
     public partial class Main : Form
     {
-        private Info Info;
+        private class Info : SettingsBase<InfoBase> { }
 
         private Version localVersion = null;
         private Version releaseVersion = null;
@@ -55,21 +54,50 @@ namespace Updater
 
         private void Main_Load(object sender, EventArgs e)
         {
+            lblName.Text = Resources.TextUpdaterName;
+
             lblLocalVersion.Text = string.Empty;
             lblReleaseVersion.Text = string.Empty;
 
-            Info = new Info(Path.Combine(Files.ExecutableDirectory(), Files.SettingsFileName()));
+            Info.Directory = Files.ExecutableDirectory();
+            Info.FileName = Files.SettingsFileName();
+
+            //File.Delete(Info.FileName);
 
             ProgramStatus.StatusChanged += ProgramStatusStatusChanged;
 
-            if (!LoadInfo())
+            if (!LoadAndCheck())
             {
                 Close();
+            }
+        }
 
-                return;
+        private bool LoadAndCheck()
+        {
+            while (!LoadInfo())
+            {
+                if (!CreateInfo())
+                {
+                    return false;
+                }
             }
 
             Check();
+
+            return true;
+        }
+
+        private bool CreateInfo()
+        {
+            if (Msg.Question(Resources.QuestionFileInfoBad))
+            {
+                if (FrmInfo.ShowDlg(this))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private async void Check()
@@ -94,13 +122,22 @@ namespace Updater
                     }
                     else
                     {
-                        Operation = Operation.Update;
+                        if (releaseVersion is null)
+                        {
+                            Operation = Operation.Check;
+                        }
+                        else
+                        {
+                            Operation = Operation.Update;
+                        }
                     }
                 }
             }
             catch (Exception e)
             {
                 Operation = Operation.Check;
+
+                Utils.WriteError(e);
 
                 Msg.Error(e.Message);
             }
@@ -156,29 +193,17 @@ namespace Updater
 
         private bool LoadInfo()
         {
-            var msg = string.Empty;
-
             try
             {
                 Info.Load();
+                Info.Default.Check();
             }
-            catch (FileNotFoundException)
+            catch (Exception e)
             {
-                msg = Resources.ErrorFileInfoNotExists;
-            }
-            catch (Exception)
-            {
-                msg = Resources.ErrorFileInfoBad;
-            }
-
-            if (!string.IsNullOrEmpty(msg))
-            {
-                Msg.Error(msg);
+                Utils.WriteError(e);
 
                 return false;
             }
-
-            lblName.Text = Info.Name;
 
             return true;
         }
@@ -191,43 +216,48 @@ namespace Updater
             }
             catch (Exception e)
             {
+                Utils.WriteError(e);
+
                 Msg.Error(e.Message);
             }
         }
 
         private void LinkLocal_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (localVersion is null)
-            {
-                OpenPath(Info.LocalPath);
-            }
-            else
-            {
-                OpenPath(Path.Combine(Info.LocalPath, Utils.Directory.LatestDirName));
-            }
+            OpenPath(Path.GetDirectoryName(Info.Default.LocalFile));
         }
 
         private void LinkRelease_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            var baseUri = new Uri(Resources.GitHubUrl);
-            var uri = new Uri(baseUri, $"{Info.ReleaseOwner}/{Info.ReleaseRepo}/releases/latest");
+            var uri = GitHub.GetLatestRelease(Info.Default.GitHubReleaseInfo.Project);
 
             OpenPath(uri.AbsoluteUri);
         }
 
         private void CheckLocalVersion()
         {
+            Utils.WriteDebug("start");
+
             var starting = ProgramStatus.Start(Status.CheckLocal);
 
             localVersion = null;
 
             try
             {
-                var currentFileName = Path.Combine(Info.LocalPath, Utils.Directory.LatestDirName, Info.LocalFile);
+                lblName.Text = Path.GetFileNameWithoutExtension(Info.Default.LocalFile);
 
-                if (File.Exists(currentFileName))
+                if (File.Exists(Info.Default.LocalFile))
                 {
-                    localVersion = Utils.GetFileVersion(currentFileName);
+                    var info = Utils.GetFileVersionInfo(Info.Default.LocalFile);
+
+                    if (info == null)
+                    {
+                        return;
+                    }
+
+                    lblName.Text = Utils.GetFileTitle(info);
+
+                    localVersion = Utils.GetFileVersion(info);
                 }
             }
             finally
@@ -238,13 +268,15 @@ namespace Updater
 
         private async Task CheckReleaseVersionAsync()
         {
+            Utils.WriteDebug("start");
+
             var starting = ProgramStatus.Start(Status.CheckRelease);
 
             releaseVersion = null;
 
             try
             {
-                releaseVersionGitHub = await Utils.Http.CheckReleaseVersionAsync(Info.ReleaseOwner, Info.ReleaseRepo);
+                releaseVersionGitHub = await GitHub.GetReleaseVersionAsync(Info.Default.GitHubReleaseInfo.Project);
 
                 var tempVersion = new Version(releaseVersionGitHub);
 
@@ -278,8 +310,8 @@ namespace Updater
 
             try
             {
-                await Utils.Http.DownloadAsync(Info.ReleaseOwner, Info.ReleaseRepo,
-                    releaseVersionGitHub, Info.ReleaseFile, archiveFileName);
+                await GitHub.DownloadAsync(Info.Default.GitHubReleaseInfo.Project,
+                    releaseVersionGitHub, Info.Default.GitHubReleaseInfo.File, archiveFileName);
             }
             finally
             {
@@ -305,8 +337,6 @@ namespace Updater
 
         private async void InstallOrUpdate()
         {
-            Utils.WriteDebug(releaseVersion.CompareTo(localVersion).ToString());
-
             if (releaseVersion.CompareTo(localVersion) != 1)
             {
                 if (!Msg.Question(Resources.QuestionVersionCompare))
@@ -319,38 +349,19 @@ namespace Updater
 
             try
             {
-                var archiveFileName = Path.Combine(Info.LocalPath, Info.ReleaseFile);
+                var programRoot = Path.GetDirectoryName(Path.GetDirectoryName(Info.Default.LocalFile));
+
+                var archiveFileName = Path.Combine(programRoot, Info.Default.GitHubReleaseInfo.File);
 
                 await DownloadAsync(archiveFileName);
 
-                var tempDir = Utils.Directory.CreateTemp(Info.LocalPath);
+                var tempDir = Utils.Directory.CreateTemp(programRoot);
 
                 await ZipExtractAsync(archiveFileName, tempDir);
 
-                var moveDir = tempDir;
+                var moveDir = Utils.Directory.CreateMoveDir(tempDir, Info.Default.LocalFile);
 
-                if (!File.Exists(Path.Combine(tempDir, Info.LocalFile)))
-                {
-                    var directories = Directory.GetDirectories(tempDir);
-
-                    if (directories.Length == 1)
-                    {
-                        if (File.Exists(Path.Combine(directories[0], Info.LocalFile)))
-                        {
-                            moveDir = directories[0];
-                        }
-                        else
-                        {
-                            throw new FileNotFoundException(Resources.ExceptionFileNotFoundInArchive);
-                        }
-                    }
-                    else
-                    {
-                        throw new FileNotFoundException(Resources.ExceptionFileNotFoundInArchive);
-                    }
-                }
-
-                var latestDir = Utils.Directory.CreateLatest(Info.LocalPath, Info.LocalFile);
+                var latestDir = Utils.Directory.CreateLatest(programRoot, Info.Default.LocalFile);
 
                 Utils.Directory.Move(moveDir, latestDir);
 

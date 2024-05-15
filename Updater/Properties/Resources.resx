@@ -117,23 +117,29 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ErrorFileInfoBad" xml:space="preserve">
-    <value>Файл с настройками повреждён.</value>
+  <data name="ErrorFileNotExists" xml:space="preserve">
+    <value>Файл не существует.</value>
   </data>
-  <data name="ErrorFileInfoNotExists" xml:space="preserve">
-    <value>Файл с настройками не существует.</value>
+  <data name="ErrorFileSave" xml:space="preserve">
+    <value>Не удалось сохранить файл.</value>
+  </data>
+  <data name="ErrorFileWrongLocation" xml:space="preserve">
+    <value>Файл должен находиться в каталоге «latest».</value>
+  </data>
+  <data name="ErrorValueEmpty" xml:space="preserve">
+    <value>Необходимо указать значение.</value>
   </data>
   <data name="ExceptionFileNotFoundInArchive" xml:space="preserve">
     <value>file not found in archive</value>
   </data>
-  <data name="GitHubApiUrl" xml:space="preserve">
-    <value>https://api.github.com</value>
-  </data>
-  <data name="GitHubUrl" xml:space="preserve">
-    <value>https://github.com</value>
+  <data name="FileOpenFilterInfo" xml:space="preserve">
+    <value>Исполняемые файлы|*.exe|Все файлы|*.*</value>
   </data>
   <data name="QuestionClosing" xml:space="preserve">
     <value>Прервать текущую операцию и закрыть программу?</value>
+  </data>
+  <data name="QuestionFileInfoBad" xml:space="preserve">
+    <value>Файл с настройками повреждён или не существует. Создать новый?</value>
   </data>
   <data name="QuestionVersionCompare" xml:space="preserve">
     <value>Текущая версия уже установлена. Продолжить?</value>
@@ -146,6 +152,9 @@
   </data>
   <data name="TextBtnUpdate" xml:space="preserve">
     <value>Обновить</value>
+  </data>
+  <data name="TextUpdaterName" xml:space="preserve">
+    <value>Модуль обновления</value>
   </data>
   <data name="TextVersionDownloading" xml:space="preserve">
     <value>загрузка...</value>

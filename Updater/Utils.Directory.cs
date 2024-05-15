@@ -1,6 +1,7 @@
 ﻿using P3tr0viCh.Utils;
 using System.IO;
 using System;
+using Updater.Properties;
 
 namespace Updater
 {
@@ -24,7 +25,7 @@ namespace Updater
 
                 System.IO.Directory.Move(sourceDirName, destDirName);
             }
-            
+
             public static void Delete(string path)
             {
                 WriteDebug($"{path}");
@@ -32,9 +33,11 @@ namespace Updater
                 Files.DirectoryDelete(path);
             }
 
-            public static string CreateTemp(string localPath)
+            public static string CreateTemp(string programRoot)
             {
-                var tempDir = Path.Combine(localPath, TempDirName);
+                var tempDir = Path.Combine(programRoot, TempDirName);
+
+                WriteDebug(tempDir);
 
                 Files.DirectoryDelete(tempDir);
 
@@ -43,32 +46,71 @@ namespace Updater
                 return tempDir;
             }
 
-            public static string CreateLatest(string localPath, string localName)
+            public static string CreateMoveDir(string tempDir, string fileName)
             {
-                var latestDir = Path.Combine(localPath, LatestDirName);
+                WriteDebug(tempDir);
 
-                if (System.IO.Directory.Exists(latestDir))
+                var moveDir = tempDir;
+
+                var fileNameOnly = Path.GetFileName(fileName);
+
+                if (!File.Exists(Path.Combine(tempDir, fileNameOnly)))
                 {
-                    var fileName = Path.Combine(latestDir, localName);
+                    var directories = System.IO.Directory.GetDirectories(tempDir);
 
-                    if (File.Exists(fileName))
+                    if (directories.Length == 1)
                     {
-                        var version = GetFileVersion(fileName);
-
-                        var versionName = version.ToString();
-
-                        var versionDir = Path.Combine(localPath, versionName);
-
-                        if (System.IO.Directory.Exists(versionDir))
+                        if (File.Exists(Path.Combine(directories[0], fileNameOnly)))
                         {
-                            versionName += "_" + DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+                            moveDir = directories[0];
                         }
-
-                        Rename(latestDir, versionName);
+                        else
+                        {
+                            throw new FileNotFoundException(Resources.ExceptionFileNotFoundInArchive);
+                        }
+                    }
+                    else
+                    {
+                        throw new FileNotFoundException(Resources.ExceptionFileNotFoundInArchive);
                     }
                 }
+                
+                WriteDebug(moveDir);
+
+                return moveDir;
+            }
+
+            public static string CreateLatest(string programRoot, string fileName)
+            {
+                WriteDebug(programRoot);
+
+                var latestDir = Path.Combine(programRoot, LatestDirName);
+
+                var versionName = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+
+                if (File.Exists(fileName))
+                {
+                    var version = GetFileVersion(fileName);
+
+                    versionName = version.ToString();
+
+                    var versionDir = Path.Combine(programRoot, versionName);
+
+                    if (System.IO.Directory.Exists(versionDir))
+                    {
+                        versionName += "_" + DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+                    }
+
+                }
+
+                Rename(latestDir, versionName);
 
                 return latestDir;
+            }
+
+            public static string GetParentName(string fileName)
+            {
+                return Path.GetFileName(Path.GetDirectoryName(fileName));
             }
         }
     }
