@@ -1,25 +1,18 @@
-﻿using P3tr0viCh.Utils;
+﻿using P3tr0viCh.AppUpdate;
+using P3tr0viCh.Utils;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Updater.Properties;
+using static P3tr0viCh.AppUpdate.AppUpdate;
 using static Updater.Enums;
 
 namespace Updater
 {
     public partial class Main : Form
     {
-        private class Info : SettingsBase<InfoBase> { }
-
-        private Version localVersion = null;
-        private Version releaseVersion = null;
-
-        private string releaseVersionGitHub = string.Empty;
-
-        private readonly ProgramStatus status = new ProgramStatus();
-        public ProgramStatus ProgramStatus { get { return status; } }
+        private class Config : SettingsBase<AppUpdate.Config> { }
 
         private Operation operation;
         public Operation Operation
@@ -57,14 +50,12 @@ namespace Updater
             lblName.Text = Resources.TextUpdaterName;
 
             lblLocalVersion.Text = string.Empty;
-            lblReleaseVersion.Text = string.Empty;
+            lblLatestVersion.Text = string.Empty;
 
-            Info.Directory = Files.ExecutableDirectory();
-            Info.FileName = Files.SettingsFileName();
+            Config.Directory = Files.ExecutableDirectory();
+            Config.FileName = Files.SettingsFileName();
 
             //File.Delete(Info.FileName);
-
-            ProgramStatus.StatusChanged += ProgramStatusStatusChanged;
 
             if (!LoadAndCheck())
             {
@@ -89,9 +80,11 @@ namespace Updater
 
         private bool CreateInfo()
         {
-            if (Msg.Question(Resources.QuestionFileInfoBad))
+            var fileExists = File.Exists(Config.FilePath);
+
+            if (!fileExists || Msg.Question(Resources.QuestionFileInfoBad))
             {
-                if (FrmInfo.ShowDlg(this))
+                if (FrmConfig.ShowDlg(this))
                 {
                     return true;
                 }
@@ -106,23 +99,21 @@ namespace Updater
 
             try
             {
-                CheckLocalVersion();
+                await Config.Default.CheckVersionsAsync();
 
-                await CheckReleaseVersionAsync();
-
-                if (localVersion is null && releaseVersion is null)
+                if (Config.Default.LocalVersion is null && Config.Default.LatestVersion is null)
                 {
                     Operation = Operation.Check;
                 }
                 else
                 {
-                    if (localVersion is null)
+                    if (Config.Default.LocalVersion is null)
                     {
                         Operation = Operation.Install;
                     }
                     else
                     {
-                        if (releaseVersion is null)
+                        if (Config.Default.LatestVersion is null)
                         {
                             Operation = Operation.Check;
                         }
@@ -137,7 +128,7 @@ namespace Updater
             {
                 Operation = Operation.Check;
 
-                Utils.WriteError(e);
+                DebugWrite.Error(e);
 
                 Msg.Error(e.Message);
             }
@@ -150,7 +141,7 @@ namespace Updater
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (ProgramStatus.Current != Status.Idle)
+            if (!Config.Default.Status.IsIdle())
             {
                 if (!Msg.Question(Resources.QuestionClosing))
                 {
@@ -159,53 +150,71 @@ namespace Updater
             }
         }
 
-        private void ProgramStatusStatusChanged(object sender, Status status)
-        {
-            if (status == Status.Idle)
-            {
-                btnOperation.Enabled = true;
-                btnOperation.Text = Resources.TextBtnCheck;
-
-                lblLocalVersion.Text = localVersion is null ? Resources.TextVersionNotExists : localVersion.ToString();
-                lblReleaseVersion.Text = releaseVersion is null ? Resources.TextVersionNotExists : releaseVersion.ToString();
-            }
-            else
-            {
-                btnOperation.Enabled = false;
-
-                switch (status)
-                {
-                    case Status.CheckLocal:
-                        lblLocalVersion.Text = Resources.TextVersionReading;
-                        break;
-                    case Status.CheckRelease:
-                        lblReleaseVersion.Text = Resources.TextVersionReading;
-                        break;
-                    case Status.Download:
-                        lblReleaseVersion.Text = Resources.TextVersionDownloading;
-                        break;
-                    case Status.ZipExtract:
-                        lblReleaseVersion.Text = Resources.TextVersionZipExtracting;
-                        break;
-                }
-            }
-        }
-
         private bool LoadInfo()
         {
             try
             {
-                Info.Load();
-                Info.Default.Check();
+                if (!Config.Load())
+                {
+                    throw Config.LastError;
+                }
+
+                Config.Default.Check();
+
+                Config.Default.Status.StatusChanged += Update_StatusChanged;
             }
             catch (Exception e)
             {
-                Utils.WriteError(e);
+                DebugWrite.Error(e);
 
                 return false;
             }
 
             return true;
+        }
+
+        private void Update_StatusChanged(object sender, Status status)
+        {
+            DebugWrite.Line(status.ToString());
+
+            btnOperation.Enabled = status == Status.Idle;
+
+            switch (status)
+            {
+                case Status.Idle:
+                    btnOperation.Text = Resources.TextBtnCheck;
+
+                    lblLocalVersion.Text = Config.Default.LocalVersion is null ?
+                        Resources.TextVersionNotExists : Config.Default.LocalVersion.ToString();
+                    lblLatestVersion.Text = Config.Default.LatestVersion is null ?
+                        Resources.TextVersionNotExists : Config.Default.LatestVersion.ToString();
+
+                    break;
+                case Status.Check:
+                    break;
+                case Status.CheckLocal:
+                    lblName.Text = Misc.GetFileTitle(Config.Default.LocalFile);
+
+                    lblLocalVersion.Text = Resources.TextVersionReading;
+
+                    break;
+                case Status.CheckLatest:
+                    lblLatestVersion.Text = Resources.TextVersionReading;
+
+                    break;
+                case Status.Download:
+                    lblLatestVersion.Text = Resources.TextVersionDownloading;
+
+                    break;
+                case Status.ArchiveExtract:
+                    lblLatestVersion.Text = Resources.TextVersionArchiveExtracting;
+
+                    break;
+                case Status.Update:
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void OpenPath(string path)
@@ -216,7 +225,7 @@ namespace Updater
             }
             catch (Exception e)
             {
-                Utils.WriteError(e);
+                DebugWrite.Error(e);
 
                 Msg.Error(e.Message);
             }
@@ -224,70 +233,14 @@ namespace Updater
 
         private void LinkLocal_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            OpenPath(Path.GetDirectoryName(Info.Default.LocalFile));
+            OpenPath(Path.GetDirectoryName(Config.Default.LocalFile));
         }
 
         private void LinkRelease_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            var uri = GitHub.GetLatestRelease(Info.Default.GitHubReleaseInfo.Project);
+            var uri = Config.Default.GetLatestRelease();
 
             OpenPath(uri.AbsoluteUri);
-        }
-
-        private void CheckLocalVersion()
-        {
-            Utils.WriteDebug("start");
-
-            var starting = ProgramStatus.Start(Status.CheckLocal);
-
-            localVersion = null;
-
-            try
-            {
-                lblName.Text = Path.GetFileNameWithoutExtension(Info.Default.LocalFile);
-
-                if (File.Exists(Info.Default.LocalFile))
-                {
-                    var info = Utils.GetFileVersionInfo(Info.Default.LocalFile);
-
-                    if (info == null)
-                    {
-                        return;
-                    }
-
-                    lblName.Text = Utils.GetFileTitle(info);
-
-                    localVersion = Utils.GetFileVersion(info);
-                }
-            }
-            finally
-            {
-                ProgramStatus.Stop(starting);
-            }
-        }
-
-        private async Task CheckReleaseVersionAsync()
-        {
-            Utils.WriteDebug("start");
-
-            var starting = ProgramStatus.Start(Status.CheckRelease);
-
-            releaseVersion = null;
-
-            try
-            {
-                releaseVersionGitHub = await GitHub.GetReleaseVersionAsync(Info.Default.GitHubReleaseInfo.Project);
-
-                var tempVersion = new Version(releaseVersionGitHub);
-
-                releaseVersion = new Version(tempVersion.Major, tempVersion.Minor,
-                    tempVersion.Build == -1 ? 0 : tempVersion.Build,
-                    tempVersion.Revision == -1 ? 0 : tempVersion.Revision);
-            }
-            finally
-            {
-                ProgramStatus.Stop(starting);
-            }
         }
 
         private void BtnOperation_Click(object sender, EventArgs e)
@@ -299,93 +252,56 @@ namespace Updater
                     break;
                 case Operation.Update:
                 case Operation.Install:
-                    InstallOrUpdate();
+                    AppUpdate();
                     break;
             }
         }
 
-        private async Task DownloadAsync(string archiveFileName)
+        private async void AppUpdate()
         {
-            var starting = ProgramStatus.Start(Status.Download);
+            DebugWrite.Line("start");
 
-            try
+            if (Config.Default.IsLatestVersion())
             {
-                await GitHub.DownloadAsync(Info.Default.GitHubReleaseInfo.Project,
-                    releaseVersionGitHub, Info.Default.GitHubReleaseInfo.File, archiveFileName);
-            }
-            finally
-            {
-                Utils.WriteDebug("done");
+                DebugWrite.Line("already latest");
 
-                ProgramStatus.Stop(starting);
-            }
-        }
-
-        private async Task ZipExtractAsync(string archiveFileName, string destinationDir)
-        {
-            var starting = ProgramStatus.Start(Status.ZipExtract);
-
-            try
-            {
-                await Utils.ZipExtractAsync(archiveFileName, destinationDir);
-            }
-            finally
-            {
-                ProgramStatus.Stop(starting);
-            }
-        }
-
-        private async void InstallOrUpdate()
-        {
-            if (releaseVersion.CompareTo(localVersion) != 1)
-            {
                 if (!Msg.Question(Resources.QuestionVersionCompare))
                 {
+                    DebugWrite.Line("cancel");
+
                     return;
                 }
             }
 
-            var starting = ProgramStatus.Start(Status.InstallOrUpdate);
-
             try
             {
-                var programRoot = Path.GetDirectoryName(Path.GetDirectoryName(Info.Default.LocalFile));
-
-                var archiveFileName = Path.Combine(programRoot, Info.Default.GitHubReleaseInfo.File);
-
-                await DownloadAsync(archiveFileName);
-
-                var tempDir = Utils.Directory.CreateTemp(programRoot);
-
-                await ZipExtractAsync(archiveFileName, tempDir);
-
-                var moveDir = Utils.Directory.CreateMoveDir(tempDir, Info.Default.LocalFile);
-
-                var latestDir = Utils.Directory.CreateLatest(programRoot, Info.Default.LocalFile);
-
-                Utils.Directory.Move(moveDir, latestDir);
-
-                Utils.Directory.Delete(tempDir);
-
-#if !DEBUG
-                Files.DirectoryDelete(archiveFileName);
-#endif
-                localVersion = releaseVersion;
+                await Config.Default.UpdateAsync();
             }
             catch (Exception e)
             {
-                Utils.WriteError(e);
+                DebugWrite.Error(e);
 
                 Msg.Error(e.Message);
             }
             finally
             {
-                Utils.WriteDebug("done");
-
-                ProgramStatus.Stop(starting);
+                DebugWrite.Line("done");
 
                 Operation = Operation.Check;
             }
+        }
+
+        private void ShowConfig()
+        {
+            if (FrmConfig.ShowDlg(this))
+            {
+                Check();
+            }
+        }
+
+        private void BtnConfig_Click(object sender, EventArgs e)
+        {
+            ShowConfig();
         }
     }
 }

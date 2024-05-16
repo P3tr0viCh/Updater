@@ -117,6 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CheckConfigOk" xml:space="preserve">
+    <value>Установленная версия {0}
+Последняя версия: {1}</value>
+  </data>
+  <data name="ErrorCheckConfig" xml:space="preserve">
+    <value>В время проверки произошла ошибка:
+{0}</value>
+  </data>
   <data name="ErrorFileNotExists" xml:space="preserve">
     <value>Файл не существует.</value>
   </data>
@@ -129,9 +137,6 @@
   <data name="ErrorValueEmpty" xml:space="preserve">
     <value>Необходимо указать значение.</value>
   </data>
-  <data name="ExceptionFileNotFoundInArchive" xml:space="preserve">
-    <value>file not found in archive</value>
-  </data>
   <data name="FileOpenFilterInfo" xml:space="preserve">
     <value>Исполняемые файлы|*.exe|Все файлы|*.*</value>
   </data>
@@ -139,7 +144,7 @@
     <value>Прервать текущую операцию и закрыть программу?</value>
   </data>
   <data name="QuestionFileInfoBad" xml:space="preserve">
-    <value>Файл с настройками повреждён или не существует. Создать новый?</value>
+    <value>Файл с настройками повреждён. Создать новый?</value>
   </data>
   <data name="QuestionVersionCompare" xml:space="preserve">
     <value>Текущая версия уже установлена. Продолжить?</value>
@@ -156,6 +161,9 @@
   <data name="TextUpdaterName" xml:space="preserve">
     <value>Модуль обновления</value>
   </data>
+  <data name="TextVersionArchiveExtracting" xml:space="preserve">
+    <value>распаковка...</value>
+  </data>
   <data name="TextVersionDownloading" xml:space="preserve">
     <value>загрузка...</value>
   </data>
@@ -167,8 +175,5 @@
   </data>
   <data name="TextVersionReading" xml:space="preserve">
     <value>чтение...</value>
-  </data>
-  <data name="TextVersionZipExtracting" xml:space="preserve">
-    <value>распаковка...</value>
   </data>
 </root>

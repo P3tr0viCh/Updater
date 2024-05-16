@@ -21,17 +21,6 @@ namespace Updater
         }
 
         [TypeConverter(typeof(EnumDescriptionConverter))]
-        public enum Status
-        {
-            Idle,
-            CheckLocal,
-            CheckRelease,
-            Download,
-            ZipExtract,
-            InstallOrUpdate,
-        }
-
-        [TypeConverter(typeof(EnumDescriptionConverter))]
         public enum Operation
         {
             Check,

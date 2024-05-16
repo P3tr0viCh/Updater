@@ -61,6 +61,26 @@ namespace Updater.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Установленная версия {0}
+        ///Последняя версия: {1}.
+        /// </summary>
+        internal static string CheckConfigOk {
+            get {
+                return ResourceManager.GetString("CheckConfigOk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to В время проверки произошла ошибка:
+        ///{0}.
+        /// </summary>
+        internal static string ErrorCheckConfig {
+            get {
+                return ResourceManager.GetString("ErrorCheckConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Файл не существует..
         /// </summary>
         internal static string ErrorFileNotExists {
@@ -97,15 +117,6 @@ namespace Updater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to file not found in archive.
-        /// </summary>
-        internal static string ExceptionFileNotFoundInArchive {
-            get {
-                return ResourceManager.GetString("ExceptionFileNotFoundInArchive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Исполняемые файлы|*.exe|Все файлы|*.*.
         /// </summary>
         internal static string FileOpenFilterInfo {
@@ -124,7 +135,7 @@ namespace Updater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Файл с настройками повреждён или не существует. Создать новый?.
+        ///   Looks up a localized string similar to Файл с настройками повреждён. Создать новый?.
         /// </summary>
         internal static string QuestionFileInfoBad {
             get {
@@ -178,6 +189,15 @@ namespace Updater.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to распаковка....
+        /// </summary>
+        internal static string TextVersionArchiveExtracting {
+            get {
+                return ResourceManager.GetString("TextVersionArchiveExtracting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to загрузка....
         /// </summary>
         internal static string TextVersionDownloading {
@@ -210,15 +230,6 @@ namespace Updater.Properties {
         internal static string TextVersionReading {
             get {
                 return ResourceManager.GetString("TextVersionReading", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to распаковка....
-        /// </summary>
-        internal static string TextVersionZipExtracting {
-            get {
-                return ResourceManager.GetString("TextVersionZipExtracting", resourceCulture);
             }
         }
     }
