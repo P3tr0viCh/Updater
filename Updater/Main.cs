@@ -33,9 +33,6 @@ namespace Updater
                     case Operation.Update:
                         btnOperation.Text = Resources.TextBtnUpdate;
                         break;
-                    case Operation.Install:
-                        btnOperation.Text = Resources.TextBtnInstall;
-                        break;
                 }
             }
         }
@@ -99,7 +96,9 @@ namespace Updater
 
             try
             {
-                await Config.Default.CheckVersionsAsync();
+                Config.Default.CheckLocalVersion();
+
+                await Config.Default.CheckLatestVersionAsync();
 
                 if (Config.Default.LocalVersion is null && Config.Default.LatestVersion is null)
                 {
@@ -107,20 +106,13 @@ namespace Updater
                 }
                 else
                 {
-                    if (Config.Default.LocalVersion is null)
+                    if (Config.Default.LatestVersion is null)
                     {
-                        Operation = Operation.Install;
+                        Operation = Operation.Check;
                     }
                     else
                     {
-                        if (Config.Default.LatestVersion is null)
-                        {
-                            Operation = Operation.Check;
-                        }
-                        else
-                        {
-                            Operation = Operation.Update;
-                        }
+                        Operation = Operation.Update;
                     }
                 }
             }
@@ -251,7 +243,6 @@ namespace Updater
                     Check();
                     break;
                 case Operation.Update:
-                case Operation.Install:
                     AppUpdate();
                     break;
             }
@@ -276,6 +267,7 @@ namespace Updater
             try
             {
                 await Config.Default.UpdateAsync();
+                //await Config.Default.DownloadAsync();
             }
             catch (Exception e)
             {

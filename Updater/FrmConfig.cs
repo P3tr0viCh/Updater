@@ -1,6 +1,8 @@
 ﻿using P3tr0viCh.AppUpdate;
 using P3tr0viCh.Utils;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 using Updater.Properties;
 
@@ -44,113 +46,117 @@ namespace Updater
             return false;
         }
 
-
         private bool CheckData()
         {
+            var msg = string.Empty;
+
             try
             {
                 Config.Default.Check();
             }
-            catch (Exception e)
+            catch (NullReferenceException)
             {
-                var msg = e.Message;
-
-                if (e is NullReferenceException)
-                {
-                    msg = Resources.ErrorValueEmpty;
-                }
-                else
-                {
-                    if (e is LocalFileNotFoundException)
-                    {
-                        msg = Resources.ErrorValueEmpty;
-                    }
-                    else
-                    {
-                        if (e is LocalFileWrongLocationException)
-                        {
-                            msg = Resources.ErrorFileWrongLocation;
-                        }
-                    }
-                }
-
-                Msg.Error(msg);
-
-                return false;
+                msg = Resources.ErrorValueEmpty;
             }
-
-            return true;
-        }
-
-        private bool SaveData()
-        {
-            try
+            catch (LocalFileNotFoundException)
             {
-                if (!Config.Save())
-                {
-                    throw Config.LastError;
-                }
+                msg = Resources.ErrorFileNotExists;
+            }
+            catch (LocalFileBadFormatException)
+            {
+                msg = Resources.ErrorFileBadFormat;
+            }
+            catch (LocalFileWrongLocationException)
+            {
+                var path = Path.Combine(Directory.GetParent(Config.Default.LocalFile).FullName,
+                    Config.Default.LocalVersion.ToString(), 
+                    Path.GetFileName(Config.Default.LocalFile));
+
+                msg = string.Format(Resources.ErrorFileWrongLocation, path);
             }
             catch (Exception e)
             {
-                DebugWrite.Error(e);
-
-                Msg.Error(Resources.ErrorFileSave);
+                msg = e.Message;
             }
 
-            return true;
+            if (msg.IsEmpty()) return true;
+
+            Msg.Error(Resources.ErrorCheckConfig, msg);
+
+            return false;
         }
 
-        private bool ApplyData()
+    private bool SaveData()
+    {
+        try
         {
-            return CheckData() && SaveData();
-        }
-
-        private void BtnCancel_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void BtnSave_Click(object sender, EventArgs e)
-        {
-            if (ApplyData())
+            if (!Config.Save())
             {
-                DialogResult = DialogResult.OK;
+                throw Config.LastError;
             }
         }
-
-        private async void CheckConfigAsync()
+        catch (Exception e)
         {
-            btnCheck.Enabled = false;
-            btnSave.Enabled = false;
+            DebugWrite.Error(e);
 
-            propertyGrid.Enabled = false;
-
-            try
-            {
-                await Config.Default.CheckVersionsAsync();
-
-                Msg.Info(string.Format(Resources.CheckConfigOk, 
-                    Config.Default.LocalVersion, Config.Default.LatestVersion));
-            }
-            catch (Exception e)
-            {
-                DebugWrite.Error(e);
-
-                Msg.Error(Resources.ErrorCheckConfig, e.Message);
-            }
-            finally
-            {
-                btnCheck.Enabled = true;
-                btnSave.Enabled = true;
-
-                propertyGrid.Enabled = true;
-            }
+            Msg.Error(Resources.ErrorFileSave);
         }
 
-        private void BtnCheck_Click(object sender, EventArgs e)
+        return true;
+    }
+
+    private bool ApplyData()
+    {
+        return CheckData() && SaveData();
+    }
+
+    private void BtnCancel_Click(object sender, EventArgs e)
+    {
+        Close();
+    }
+
+    private void BtnSave_Click(object sender, EventArgs e)
+    {
+        if (ApplyData())
         {
-            CheckConfigAsync();
+            DialogResult = DialogResult.OK;
         }
     }
+
+    private async void CheckConfigAsync()
+    {
+        btnCheck.Enabled = false;
+        btnSave.Enabled = false;
+
+        propertyGrid.Enabled = false;
+
+        try
+        {
+            if (!CheckData()) return;
+
+            await Config.Default.CheckLatestVersionAsync();
+
+            Msg.Info(string.Format(Resources.CheckConfigOk,
+                Config.Default.LocalVersion, Config.Default.LatestVersion));
+        }
+        catch (Exception e)
+        {
+            DebugWrite.Error(e);
+
+            Msg.Error(Resources.ErrorCheckConfig, e.Message);
+        }
+        finally
+        {
+            btnCheck.Enabled = true;
+            btnSave.Enabled = true;
+
+            propertyGrid.Enabled = true;
+        }
+    }
+
+    private void BtnCheck_Click(object sender, EventArgs e)
+    {
+        CheckConfigAsync();
+    }
+}
 }

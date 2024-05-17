@@ -81,6 +81,15 @@ namespace Updater.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Не удалось получить версию из файла..
+        /// </summary>
+        internal static string ErrorFileBadFormat {
+            get {
+                return ResourceManager.GetString("ErrorFileBadFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Файл не существует..
         /// </summary>
         internal static string ErrorFileNotExists {
@@ -99,7 +108,7 @@ namespace Updater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Файл должен находиться в каталоге «latest»..
+        ///   Looks up a localized string similar to Файл должен находиться в каталоге c номером версии, например, {0}..
         /// </summary>
         internal static string ErrorFileWrongLocation {
             get {
@@ -158,15 +167,6 @@ namespace Updater.Properties {
         internal static string TextBtnCheck {
             get {
                 return ResourceManager.GetString("TextBtnCheck", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Установить.
-        /// </summary>
-        internal static string TextBtnInstall {
-            get {
-                return ResourceManager.GetString("TextBtnInstall", resourceCulture);
             }
         }
         

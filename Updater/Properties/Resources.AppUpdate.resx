@@ -117,63 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CheckConfigOk" xml:space="preserve">
-    <value>Установленная версия {0}
-Последняя версия: {1}</value>
+  <data name="Category.Common" xml:space="preserve">
+    <value>Общее</value>
   </data>
-  <data name="ErrorCheckConfig" xml:space="preserve">
-    <value>В время проверки произошла ошибка:
-{0}</value>
+  <data name="Category.UpdateLocation" xml:space="preserve">
+    <value>Расположение обновления</value>
   </data>
-  <data name="ErrorFileBadFormat" xml:space="preserve">
-    <value>Не удалось получить версию из файла.</value>
+  <data name="Config.GitHub.Description" xml:space="preserve">
+    <value />
   </data>
-  <data name="ErrorFileNotExists" xml:space="preserve">
-    <value>Файл не существует.</value>
+  <data name="Config.GitHub.DisplayName" xml:space="preserve">
+    <value>ГитХаб</value>
   </data>
-  <data name="ErrorFileSave" xml:space="preserve">
-    <value>Не удалось сохранить файл.</value>
+  <data name="Config.LocalFile.Description" xml:space="preserve">
+    <value>Расположение исполняемого файла.</value>
   </data>
-  <data name="ErrorFileWrongLocation" xml:space="preserve">
-    <value>Файл должен находиться в каталоге c номером версии, например, {0}.</value>
+  <data name="Config.LocalFile.DisplayName" xml:space="preserve">
+    <value>Программа</value>
   </data>
-  <data name="ErrorValueEmpty" xml:space="preserve">
-    <value>Необходимо указать значение.</value>
+  <data name="GitHub.ArchiveFile.Description" xml:space="preserve">
+    <value />
   </data>
-  <data name="FileOpenFilterInfo" xml:space="preserve">
-    <value>Исполняемые файлы|*.exe|Все файлы|*.*</value>
+  <data name="GitHub.ArchiveFile.DisplayName" xml:space="preserve">
+    <value>Архив с обновлением</value>
   </data>
-  <data name="QuestionClosing" xml:space="preserve">
-    <value>Прервать текущую операцию и закрыть программу?</value>
+  <data name="GitHub.Owner.Description" xml:space="preserve">
+    <value />
   </data>
-  <data name="QuestionFileInfoBad" xml:space="preserve">
-    <value>Файл с настройками повреждён. Создать новый?</value>
+  <data name="GitHub.Owner.DisplayName" xml:space="preserve">
+    <value>Владелец</value>
   </data>
-  <data name="QuestionVersionCompare" xml:space="preserve">
-    <value>Текущая версия уже установлена. Продолжить?</value>
+  <data name="GitHub.Repo.Description" xml:space="preserve">
+    <value />
   </data>
-  <data name="TextBtnCheck" xml:space="preserve">
-    <value>Проверить</value>
-  </data>
-  <data name="TextBtnUpdate" xml:space="preserve">
-    <value>Обновить</value>
-  </data>
-  <data name="TextUpdaterName" xml:space="preserve">
-    <value>Модуль обновления</value>
-  </data>
-  <data name="TextVersionArchiveExtracting" xml:space="preserve">
-    <value>распаковка...</value>
-  </data>
-  <data name="TextVersionDownloading" xml:space="preserve">
-    <value>загрузка...</value>
-  </data>
-  <data name="TextVersionError" xml:space="preserve">
-    <value>ошибка</value>
-  </data>
-  <data name="TextVersionNotExists" xml:space="preserve">
-    <value>нет</value>
-  </data>
-  <data name="TextVersionReading" xml:space="preserve">
-    <value>чтение...</value>
+  <data name="GitHub.Repo.DisplayName" xml:space="preserve">
+    <value>Репозиторий</value>
   </data>
 </root>
