@@ -123,8 +123,14 @@
   <data name="Category.UpdateLocation" xml:space="preserve">
     <value>Расположение обновления</value>
   </data>
+  <data name="Config.Folder.Description" xml:space="preserve">
+    <value>Каталог с файлом обновления</value>
+  </data>
+  <data name="Config.Folder.DisplayName" xml:space="preserve">
+    <value>Папка</value>
+  </data>
   <data name="Config.GitHub.Description" xml:space="preserve">
-    <value />
+    <value>ГитХаб</value>
   </data>
   <data name="Config.GitHub.DisplayName" xml:space="preserve">
     <value>ГитХаб</value>
@@ -135,20 +141,44 @@
   <data name="Config.LocalFile.DisplayName" xml:space="preserve">
     <value>Программа</value>
   </data>
-  <data name="GitHub.ArchiveFile.Description" xml:space="preserve">
-    <value />
+  <data name="Config.Location.Description" xml:space="preserve">
+    <value>Расположение обновления</value>
   </data>
-  <data name="GitHub.ArchiveFile.DisplayName" xml:space="preserve">
+  <data name="Config.Location.DisplayName" xml:space="preserve">
+    <value>Расположение</value>
+  </data>
+  <data name="Config.Location.Folder.Description" xml:space="preserve">
+    <value>Папка</value>
+  </data>
+  <data name="Config.Location.GitHub.Description" xml:space="preserve">
+    <value>ГитХаб</value>
+  </data>
+  <data name="Folder.ArchiveFile.Description" xml:space="preserve">
     <value>Архив с обновлением</value>
   </data>
+  <data name="Folder.ArchiveFile.DisplayName" xml:space="preserve">
+    <value>Архив</value>
+  </data>
+  <data name="Folder.Path.Description" xml:space="preserve">
+    <value>Каталог с файлом обновления</value>
+  </data>
+  <data name="Folder.Path.DisplayName" xml:space="preserve">
+    <value>Папка</value>
+  </data>
+  <data name="GitHub.ArchiveFile.Description" xml:space="preserve">
+    <value>Архив с обновлением</value>
+  </data>
+  <data name="GitHub.ArchiveFile.DisplayName" xml:space="preserve">
+    <value>Архив</value>
+  </data>
   <data name="GitHub.Owner.Description" xml:space="preserve">
-    <value />
+    <value>Владелец</value>
   </data>
   <data name="GitHub.Owner.DisplayName" xml:space="preserve">
     <value>Владелец</value>
   </data>
   <data name="GitHub.Repo.Description" xml:space="preserve">
-    <value />
+    <value>Репозиторий</value>
   </data>
   <data name="GitHub.Repo.DisplayName" xml:space="preserve">
     <value>Репозиторий</value>

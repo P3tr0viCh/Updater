@@ -5,14 +5,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using Updater.Properties;
-using static P3tr0viCh.AppUpdate.AppUpdate;
 using static Updater.Enums;
 
 namespace Updater
 {
     public partial class Main : Form
     {
-        private class Config : SettingsBase<AppUpdate.Config> { }
+        private class Config : SettingsBase<P3tr0viCh.AppUpdate.Config> { }
+
+        private readonly AppUpdate AppUpdate = new AppUpdate();
 
         private Operation operation;
         public Operation Operation
@@ -96,17 +97,17 @@ namespace Updater
 
             try
             {
-                Config.Default.CheckLocalVersion();
+                AppUpdate.CheckLocalVersion();
 
-                await Config.Default.CheckLatestVersionAsync();
+                await AppUpdate.CheckLatestVersionAsync();
 
-                if (Config.Default.LocalVersion is null && Config.Default.LatestVersion is null)
+                if (AppUpdate.Versions.Local is null && AppUpdate.Versions.Latest is null)
                 {
                     Operation = Operation.Check;
                 }
                 else
                 {
-                    if (Config.Default.LatestVersion is null)
+                    if (AppUpdate.Versions.Latest is null)
                     {
                         Operation = Operation.Check;
                     }
@@ -133,7 +134,7 @@ namespace Updater
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!Config.Default.Status.IsIdle())
+            if (!AppUpdate.Status.IsIdle())
             {
                 if (!Msg.Question(Resources.QuestionClosing))
                 {
@@ -151,9 +152,11 @@ namespace Updater
                     throw Config.LastError;
                 }
 
-                Config.Default.Check();
+                AppUpdate.Config = Config.Default;
 
-                Config.Default.Status.StatusChanged += Update_StatusChanged;
+                AppUpdate.Check();
+
+                AppUpdate.Status.StatusChanged += Update_StatusChanged;
             }
             catch (Exception e)
             {
@@ -165,44 +168,44 @@ namespace Updater
             return true;
         }
 
-        private void Update_StatusChanged(object sender, Status status)
+        private void Update_StatusChanged(object sender, UpdateStatus status)
         {
             DebugWrite.Line(status.ToString());
 
-            btnOperation.Enabled = status == Status.Idle;
+            btnOperation.Enabled = status == UpdateStatus.Idle;
 
             switch (status)
             {
-                case Status.Idle:
+                case UpdateStatus.Idle:
                     btnOperation.Text = Resources.TextBtnCheck;
 
-                    lblLocalVersion.Text = Config.Default.LocalVersion is null ?
-                        Resources.TextVersionNotExists : Config.Default.LocalVersion.ToString();
-                    lblLatestVersion.Text = Config.Default.LatestVersion is null ?
-                        Resources.TextVersionNotExists : Config.Default.LatestVersion.ToString();
+                    lblLocalVersion.Text = AppUpdate.Versions.Local is null ?
+                        Resources.TextVersionNotExists : AppUpdate.Versions.Local.ToString();
+                    lblLatestVersion.Text = AppUpdate.Versions.Latest is null ?
+                        Resources.TextVersionNotExists : AppUpdate.Versions.Latest.ToString();
 
                     break;
-                case Status.Check:
+                case UpdateStatus.Check:
                     break;
-                case Status.CheckLocal:
-                    lblName.Text = Misc.GetFileTitle(Config.Default.LocalFile);
+                case UpdateStatus.CheckLocal:
+                    lblName.Text = Misc.GetFileTitle(AppUpdate.Config.LocalFile);
 
                     lblLocalVersion.Text = Resources.TextVersionReading;
 
                     break;
-                case Status.CheckLatest:
+                case UpdateStatus.CheckLatest:
                     lblLatestVersion.Text = Resources.TextVersionReading;
 
                     break;
-                case Status.Download:
+                case UpdateStatus.Download:
                     lblLatestVersion.Text = Resources.TextVersionDownloading;
 
                     break;
-                case Status.ArchiveExtract:
+                case UpdateStatus.ArchiveExtract:
                     lblLatestVersion.Text = Resources.TextVersionArchiveExtracting;
 
                     break;
-                case Status.Update:
+                case UpdateStatus.Update:
                     break;
                 default:
                     break;
@@ -225,12 +228,12 @@ namespace Updater
 
         private void LinkLocal_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            OpenPath(Path.GetDirectoryName(Config.Default.LocalFile));
+            OpenPath(Path.GetDirectoryName(AppUpdate.Config.LocalFile));
         }
 
         private void LinkRelease_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            var uri = Config.Default.GetLatestRelease();
+            var uri = AppUpdate.GetLatestRelease();
 
             OpenPath(uri.AbsoluteUri);
         }
@@ -243,16 +246,16 @@ namespace Updater
                     Check();
                     break;
                 case Operation.Update:
-                    AppUpdate();
+                    DoUpdate();
                     break;
             }
         }
 
-        private async void AppUpdate()
+        private async void DoUpdate()
         {
             DebugWrite.Line("start");
 
-            if (Config.Default.IsLatestVersion())
+            if (AppUpdate.Versions.IsLatest())
             {
                 DebugWrite.Line("already latest");
 
@@ -266,8 +269,8 @@ namespace Updater
 
             try
             {
-                await Config.Default.UpdateAsync();
-                //await Config.Default.DownloadAsync();
+                //await AppUpdate.UpdateAsync();
+                await AppUpdate.DownloadAsync();
             }
             catch (Exception e)
             {

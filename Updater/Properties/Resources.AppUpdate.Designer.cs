@@ -79,7 +79,25 @@ namespace Updater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Каталог с файлом обновления.
+        /// </summary>
+        public static string Config_Folder_Description {
+            get {
+                return ResourceManager.GetString("Config.Folder.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Папка.
+        /// </summary>
+        public static string Config_Folder_DisplayName {
+            get {
+                return ResourceManager.GetString("Config.Folder.DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ГитХаб.
         /// </summary>
         public static string Config_GitHub_Description {
             get {
@@ -115,7 +133,79 @@ namespace Updater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Расположение обновления.
+        /// </summary>
+        public static string Config_Location_Description {
+            get {
+                return ResourceManager.GetString("Config.Location.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Расположение.
+        /// </summary>
+        public static string Config_Location_DisplayName {
+            get {
+                return ResourceManager.GetString("Config.Location.DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Папка.
+        /// </summary>
+        public static string Config_Location_Folder_Description {
+            get {
+                return ResourceManager.GetString("Config.Location.Folder.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ГитХаб.
+        /// </summary>
+        public static string Config_Location_GitHub_Description {
+            get {
+                return ResourceManager.GetString("Config.Location.GitHub.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Архив с обновлением.
+        /// </summary>
+        public static string Folder_ArchiveFile_Description {
+            get {
+                return ResourceManager.GetString("Folder.ArchiveFile.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Архив.
+        /// </summary>
+        public static string Folder_ArchiveFile_DisplayName {
+            get {
+                return ResourceManager.GetString("Folder.ArchiveFile.DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Каталог с файлом обновления.
+        /// </summary>
+        public static string Folder_Path_Description {
+            get {
+                return ResourceManager.GetString("Folder.Path.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Папка.
+        /// </summary>
+        public static string Folder_Path_DisplayName {
+            get {
+                return ResourceManager.GetString("Folder.Path.DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Архив с обновлением.
         /// </summary>
         public static string GitHub_ArchiveFile_Description {
             get {
@@ -124,7 +214,7 @@ namespace Updater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Архив с обновлением.
+        ///   Looks up a localized string similar to Архив.
         /// </summary>
         public static string GitHub_ArchiveFile_DisplayName {
             get {
@@ -133,7 +223,7 @@ namespace Updater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Владелец.
         /// </summary>
         public static string GitHub_Owner_Description {
             get {
@@ -151,7 +241,7 @@ namespace Updater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Репозиторий.
         /// </summary>
         public static string GitHub_Repo_Description {
             get {

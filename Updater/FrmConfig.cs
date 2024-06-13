@@ -1,7 +1,6 @@
 ﻿using P3tr0viCh.AppUpdate;
 using P3tr0viCh.Utils;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using Updater.Properties;
@@ -10,7 +9,9 @@ namespace Updater
 {
     public partial class FrmConfig : Form
     {
-        private class Config : SettingsBase<AppUpdate.Config> { }
+        private class Config : SettingsBase<P3tr0viCh.AppUpdate.Config> { }
+
+        private readonly AppUpdate AppUpdate = new AppUpdate();
 
         public FrmConfig()
         {
@@ -29,6 +30,8 @@ namespace Updater
         {
             Config.Directory = Files.ExecutableDirectory();
             Config.FileName = Files.SettingsFileName();
+
+            AppUpdate.Config = Config.Default;
 
             propertyGrid.SelectedObject = Config.Default;
 
@@ -52,7 +55,7 @@ namespace Updater
 
             try
             {
-                Config.Default.Check();
+                AppUpdate.Check();
             }
             catch (NullReferenceException)
             {
@@ -69,7 +72,7 @@ namespace Updater
             catch (LocalFileWrongLocationException)
             {
                 var path = Path.Combine(Directory.GetParent(Config.Default.LocalFile).FullName,
-                    Config.Default.LocalVersion.ToString(), 
+                    AppUpdate.Versions.Local.ToString(),
                     Path.GetFileName(Config.Default.LocalFile));
 
                 msg = string.Format(Resources.ErrorFileWrongLocation, path);
@@ -86,77 +89,77 @@ namespace Updater
             return false;
         }
 
-    private bool SaveData()
-    {
-        try
+        private bool SaveData()
         {
-            if (!Config.Save())
+            try
             {
-                throw Config.LastError;
+                if (!Config.Save())
+                {
+                    throw Config.LastError;
+                }
+            }
+            catch (Exception e)
+            {
+                DebugWrite.Error(e);
+
+                Msg.Error(Resources.ErrorFileSave);
+            }
+
+            return true;
+        }
+
+        private bool ApplyData()
+        {
+            return CheckData() && SaveData();
+        }
+
+        private void BtnCancel_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void BtnSave_Click(object sender, EventArgs e)
+        {
+            if (ApplyData())
+            {
+                DialogResult = DialogResult.OK;
             }
         }
-        catch (Exception e)
-        {
-            DebugWrite.Error(e);
 
-            Msg.Error(Resources.ErrorFileSave);
+        private async void CheckConfigAsync()
+        {
+            btnCheck.Enabled = false;
+            btnSave.Enabled = false;
+
+            propertyGrid.Enabled = false;
+
+            try
+            {
+                if (!CheckData()) return;
+
+                await AppUpdate.CheckLatestVersionAsync();
+
+                Msg.Info(string.Format(Resources.CheckConfigOk,
+                    AppUpdate.Versions.Local, AppUpdate.Versions.Latest));
+            }
+            catch (Exception e)
+            {
+                DebugWrite.Error(e);
+
+                Msg.Error(Resources.ErrorCheckConfig, e.Message);
+            }
+            finally
+            {
+                btnCheck.Enabled = true;
+                btnSave.Enabled = true;
+
+                propertyGrid.Enabled = true;
+            }
         }
 
-        return true;
-    }
-
-    private bool ApplyData()
-    {
-        return CheckData() && SaveData();
-    }
-
-    private void BtnCancel_Click(object sender, EventArgs e)
-    {
-        Close();
-    }
-
-    private void BtnSave_Click(object sender, EventArgs e)
-    {
-        if (ApplyData())
+        private void BtnCheck_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.OK;
+            CheckConfigAsync();
         }
     }
-
-    private async void CheckConfigAsync()
-    {
-        btnCheck.Enabled = false;
-        btnSave.Enabled = false;
-
-        propertyGrid.Enabled = false;
-
-        try
-        {
-            if (!CheckData()) return;
-
-            await Config.Default.CheckLatestVersionAsync();
-
-            Msg.Info(string.Format(Resources.CheckConfigOk,
-                Config.Default.LocalVersion, Config.Default.LatestVersion));
-        }
-        catch (Exception e)
-        {
-            DebugWrite.Error(e);
-
-            Msg.Error(Resources.ErrorCheckConfig, e.Message);
-        }
-        finally
-        {
-            btnCheck.Enabled = true;
-            btnSave.Enabled = true;
-
-            propertyGrid.Enabled = true;
-        }
-    }
-
-    private void BtnCheck_Click(object sender, EventArgs e)
-    {
-        CheckConfigAsync();
-    }
-}
 }
