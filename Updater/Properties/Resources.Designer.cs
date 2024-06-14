@@ -162,24 +162,6 @@ namespace Updater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Проверить.
-        /// </summary>
-        internal static string TextBtnCheck {
-            get {
-                return ResourceManager.GetString("TextBtnCheck", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Обновить.
-        /// </summary>
-        internal static string TextBtnUpdate {
-            get {
-                return ResourceManager.GetString("TextBtnUpdate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Модуль обновления.
         /// </summary>
         internal static string TextUpdaterName {

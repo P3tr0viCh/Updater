@@ -165,6 +165,12 @@
   <data name="Folder.Path.DisplayName" xml:space="preserve">
     <value>Папка</value>
   </data>
+  <data name="Folder.VersionFile.Description" xml:space="preserve">
+    <value>Файл с номером версии обновления</value>
+  </data>
+  <data name="Folder.VersionFile.DisplayName" xml:space="preserve">
+    <value>Файл версии</value>
+  </data>
   <data name="GitHub.ArchiveFile.Description" xml:space="preserve">
     <value>Архив с обновлением</value>
   </data>

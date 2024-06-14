@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using Updater.Properties;
-using static Updater.Enums;
 
 namespace Updater
 {
@@ -15,26 +14,16 @@ namespace Updater
 
         private readonly AppUpdate AppUpdate = new AppUpdate();
 
-        private Operation operation;
-        public Operation Operation
+        private bool InProgress
         {
-            get
-            {
-                return operation;
-            }
             set
             {
-                operation = value;
+                var enabled = !value;
 
-                switch (operation)
-                {
-                    case Operation.Check:
-                        btnOperation.Text = Resources.TextBtnCheck;
-                        break;
-                    case Operation.Update:
-                        btnOperation.Text = Resources.TextBtnUpdate;
-                        break;
-                }
+                btnCheck.Enabled = enabled;
+                btnDownload.Enabled = enabled;
+                btnUpdate.Enabled = enabled;
+                btnConfig.Enabled = enabled;
             }
         }
 
@@ -71,7 +60,7 @@ namespace Updater
                 }
             }
 
-            Check();
+            DoCheck();
 
             return true;
         }
@@ -89,42 +78,6 @@ namespace Updater
             }
 
             return false;
-        }
-
-        private async void Check()
-        {
-            Operation = Operation.Check;
-
-            try
-            {
-                AppUpdate.CheckLocalVersion();
-
-                await AppUpdate.CheckLatestVersionAsync();
-
-                if (AppUpdate.Versions.Local is null && AppUpdate.Versions.Latest is null)
-                {
-                    Operation = Operation.Check;
-                }
-                else
-                {
-                    if (AppUpdate.Versions.Latest is null)
-                    {
-                        Operation = Operation.Check;
-                    }
-                    else
-                    {
-                        Operation = Operation.Update;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Operation = Operation.Check;
-
-                DebugWrite.Error(e);
-
-                Msg.Error(e.Message);
-            }
         }
 
         private void BtnClose_Click(object sender, EventArgs e)
@@ -172,13 +125,11 @@ namespace Updater
         {
             DebugWrite.Line(status.ToString());
 
-            btnOperation.Enabled = status == UpdateStatus.Idle;
+            btnCheck.Enabled = status == UpdateStatus.Idle;
 
             switch (status)
             {
                 case UpdateStatus.Idle:
-                    btnOperation.Text = Resources.TextBtnCheck;
-
                     lblLocalVersion.Text = AppUpdate.Versions.Local is null ?
                         Resources.TextVersionNotExists : AppUpdate.Versions.Local.ToString();
                     lblLatestVersion.Text = AppUpdate.Versions.Latest is null ?
@@ -238,16 +189,57 @@ namespace Updater
             OpenPath(uri.AbsoluteUri);
         }
 
-        private void BtnOperation_Click(object sender, EventArgs e)
+        private void ShowConfig()
         {
-            switch (Operation)
+            if (FrmConfig.ShowDlg(this))
             {
-                case Operation.Check:
-                    Check();
-                    break;
-                case Operation.Update:
-                    DoUpdate();
-                    break;
+                DoCheck();
+            }
+        }
+
+        private async void DoCheck()
+        {
+            InProgress = true;
+
+            try
+            {
+                AppUpdate.CheckLocalVersion();
+
+                await AppUpdate.CheckLatestVersionAsync();
+            }
+            catch (Exception e)
+            {
+                DebugWrite.Error(e);
+
+                Msg.Error(e.Message);
+            }
+            finally
+            {
+                InProgress = false;
+            }
+        }
+        
+        private async void DoDownload()
+        {
+            DebugWrite.Line("start");
+
+            InProgress = true;
+
+            try
+            {
+                await AppUpdate.DownloadAsync();
+            }
+            catch (Exception e)
+            {
+                DebugWrite.Error(e);
+
+                Msg.Error(e.Message);
+            }
+            finally
+            {
+                InProgress = false;
+
+                DebugWrite.Line("done");
             }
         }
 
@@ -267,10 +259,11 @@ namespace Updater
                 }
             }
 
+            InProgress = true;
+
             try
             {
-                //await AppUpdate.UpdateAsync();
-                await AppUpdate.DownloadAsync();
+                await AppUpdate.UpdateAsync();
             }
             catch (Exception e)
             {
@@ -280,23 +273,30 @@ namespace Updater
             }
             finally
             {
+                InProgress = false;
+
                 DebugWrite.Line("done");
-
-                Operation = Operation.Check;
-            }
-        }
-
-        private void ShowConfig()
-        {
-            if (FrmConfig.ShowDlg(this))
-            {
-                Check();
             }
         }
 
         private void BtnConfig_Click(object sender, EventArgs e)
         {
             ShowConfig();
+        }
+
+        private void BtnCheck_Click(object sender, EventArgs e)
+        {
+            DoCheck();
+        }
+
+        private void BtnDownload_Click(object sender, EventArgs e)
+        {
+            DoDownload();
+        }
+
+        private void BtnUpdate_Click(object sender, EventArgs e)
+        {
+            DoUpdate();
         }
     }
 }

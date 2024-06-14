@@ -205,6 +205,24 @@ namespace Updater.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Файл с номером версии обновления.
+        /// </summary>
+        public static string Folder_VersionFile_Description {
+            get {
+                return ResourceManager.GetString("Folder.VersionFile.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Файл версии.
+        /// </summary>
+        public static string Folder_VersionFile_DisplayName {
+            get {
+                return ResourceManager.GetString("Folder.VersionFile.DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Архив с обновлением.
         /// </summary>
         public static string GitHub_ArchiveFile_Description {

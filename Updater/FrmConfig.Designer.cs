@@ -40,7 +40,7 @@
             // btnSave
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSave.Location = new System.Drawing.Point(240, 8);
+            this.btnSave.Location = new System.Drawing.Point(304, 8);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(88, 32);
             this.btnSave.TabIndex = 1;
@@ -51,7 +51,7 @@
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(336, 8);
+            this.btnCancel.Location = new System.Drawing.Point(400, 8);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(80, 32);
             this.btnCancel.TabIndex = 2;
@@ -74,7 +74,7 @@
             this.propertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid.Location = new System.Drawing.Point(0, 0);
             this.propertyGrid.Name = "propertyGrid";
-            this.propertyGrid.Size = new System.Drawing.Size(424, 313);
+            this.propertyGrid.Size = new System.Drawing.Size(488, 393);
             this.propertyGrid.TabIndex = 0;
             // 
             // panelBottom
@@ -83,16 +83,16 @@
             this.panelBottom.Controls.Add(this.btnSave);
             this.panelBottom.Controls.Add(this.btnCancel);
             this.panelBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelBottom.Location = new System.Drawing.Point(0, 313);
+            this.panelBottom.Location = new System.Drawing.Point(0, 393);
             this.panelBottom.Name = "panelBottom";
-            this.panelBottom.Size = new System.Drawing.Size(424, 48);
+            this.panelBottom.Size = new System.Drawing.Size(488, 48);
             this.panelBottom.TabIndex = 1;
             // 
-            // FrmInfo
+            // FrmConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(424, 361);
+            this.ClientSize = new System.Drawing.Size(488, 441);
             this.Controls.Add(this.propertyGrid);
             this.Controls.Add(this.panelBottom);
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
@@ -100,7 +100,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(400, 400);
-            this.Name = "FrmInfo";
+            this.Name = "FrmConfig";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Обновление";
             this.Load += new System.EventHandler(this.FrmInfo_Load);

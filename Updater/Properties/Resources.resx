@@ -152,12 +152,6 @@
   <data name="QuestionVersionCompare" xml:space="preserve">
     <value>Текущая версия уже установлена. Продолжить?</value>
   </data>
-  <data name="TextBtnCheck" xml:space="preserve">
-    <value>Проверить</value>
-  </data>
-  <data name="TextBtnUpdate" xml:space="preserve">
-    <value>Обновить</value>
-  </data>
   <data name="TextUpdaterName" xml:space="preserve">
     <value>Модуль обновления</value>
   </data>

@@ -34,9 +34,11 @@
             this.lblName = new System.Windows.Forms.Label();
             this.linkLocal = new System.Windows.Forms.LinkLabel();
             this.linkLatest = new System.Windows.Forms.LinkLabel();
-            this.btnOperation = new System.Windows.Forms.Button();
+            this.btnCheck = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnConfig = new System.Windows.Forms.Button();
+            this.btnDownload = new System.Windows.Forms.Button();
+            this.btnUpdate = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblLocalVersion
@@ -91,44 +93,66 @@
             this.linkLatest.Text = "Последняя версия";
             this.linkLatest.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkRelease_LinkClicked);
             // 
-            // btnOperation
+            // btnCheck
             // 
-            this.btnOperation.Location = new System.Drawing.Point(16, 144);
-            this.btnOperation.Name = "btnOperation";
-            this.btnOperation.Size = new System.Drawing.Size(104, 32);
-            this.btnOperation.TabIndex = 5;
-            this.btnOperation.Text = "check";
-            this.btnOperation.UseVisualStyleBackColor = true;
-            this.btnOperation.Click += new System.EventHandler(this.BtnOperation_Click);
+            this.btnCheck.Location = new System.Drawing.Point(16, 144);
+            this.btnCheck.Name = "btnCheck";
+            this.btnCheck.Size = new System.Drawing.Size(104, 32);
+            this.btnCheck.TabIndex = 5;
+            this.btnCheck.Text = "Проверить";
+            this.btnCheck.UseVisualStyleBackColor = true;
+            this.btnCheck.Click += new System.EventHandler(this.BtnCheck_Click);
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(248, 144);
+            this.btnClose.Location = new System.Drawing.Point(256, 192);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(104, 32);
-            this.btnClose.TabIndex = 7;
+            this.btnClose.TabIndex = 9;
             this.btnClose.Text = "Закрыть";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.BtnClose_Click);
             // 
             // btnConfig
             // 
-            this.btnConfig.Location = new System.Drawing.Point(132, 144);
+            this.btnConfig.Location = new System.Drawing.Point(136, 192);
             this.btnConfig.Name = "btnConfig";
             this.btnConfig.Size = new System.Drawing.Size(104, 32);
-            this.btnConfig.TabIndex = 6;
+            this.btnConfig.TabIndex = 8;
             this.btnConfig.Text = "Настройка";
             this.btnConfig.UseVisualStyleBackColor = true;
             this.btnConfig.Click += new System.EventHandler(this.BtnConfig_Click);
+            // 
+            // btnDownload
+            // 
+            this.btnDownload.Location = new System.Drawing.Point(136, 144);
+            this.btnDownload.Name = "btnDownload";
+            this.btnDownload.Size = new System.Drawing.Size(104, 32);
+            this.btnDownload.TabIndex = 6;
+            this.btnDownload.Text = "Загрузить";
+            this.btnDownload.UseVisualStyleBackColor = true;
+            this.btnDownload.Click += new System.EventHandler(this.BtnDownload_Click);
+            // 
+            // btnUpdate
+            // 
+            this.btnUpdate.Location = new System.Drawing.Point(256, 144);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(104, 32);
+            this.btnUpdate.TabIndex = 7;
+            this.btnUpdate.Text = "Обновить";
+            this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.Click += new System.EventHandler(this.BtnUpdate_Click);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(368, 193);
+            this.ClientSize = new System.Drawing.Size(376, 241);
+            this.Controls.Add(this.btnUpdate);
+            this.Controls.Add(this.btnDownload);
             this.Controls.Add(this.btnConfig);
             this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.btnOperation);
+            this.Controls.Add(this.btnCheck);
             this.Controls.Add(this.linkLatest);
             this.Controls.Add(this.linkLocal);
             this.Controls.Add(this.lblName);
@@ -156,9 +180,11 @@
         private System.Windows.Forms.Label lblName;
         private System.Windows.Forms.LinkLabel linkLocal;
         private System.Windows.Forms.LinkLabel linkLatest;
-        private System.Windows.Forms.Button btnOperation;
+        private System.Windows.Forms.Button btnCheck;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btnConfig;
+        private System.Windows.Forms.Button btnDownload;
+        private System.Windows.Forms.Button btnUpdate;
     }
 }
 
