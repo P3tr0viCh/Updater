@@ -123,6 +123,12 @@
   <data name="Category.UpdateLocation" xml:space="preserve">
     <value>Расположение обновления</value>
   </data>
+  <data name="Config.CopySettings.Description" xml:space="preserve">
+    <value>Копировать файл с настройками обновляемой программы</value>
+  </data>
+  <data name="Config.CopySettings.DisplayName" xml:space="preserve">
+    <value>Копировать настройки</value>
+  </data>
   <data name="Config.Folder.Description" xml:space="preserve">
     <value>Каталог с файлом обновления</value>
   </data>

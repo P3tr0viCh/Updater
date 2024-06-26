@@ -79,6 +79,24 @@ namespace Updater.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Копировать файл с настройками обновляемой программы.
+        /// </summary>
+        public static string Config_CopySettings_Description {
+            get {
+                return ResourceManager.GetString("Config.CopySettings.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Копировать настройки.
+        /// </summary>
+        public static string Config_CopySettings_DisplayName {
+            get {
+                return ResourceManager.GetString("Config.CopySettings.DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Каталог с файлом обновления.
         /// </summary>
         public static string Config_Folder_Description {

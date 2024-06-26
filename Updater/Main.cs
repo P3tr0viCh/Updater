@@ -109,6 +109,8 @@ namespace Updater
 
                 AppUpdate.Check();
 
+                AppUpdate.AfterUpdate += AppUpdate_AfterUpdate;
+
                 AppUpdate.Status.StatusChanged += Update_StatusChanged;
             }
             catch (Exception e)
@@ -121,11 +123,17 @@ namespace Updater
             return true;
         }
 
+        private void AppUpdate_AfterUpdate(object sender, AppUpdate.AfterUpdateEventArgs e)
+        {
+            DebugWrite.Line($"CurrentDir: {e.CurrentDir}, LatestDir: {e.LatestDir}");
+        }
+
         private void Update_StatusChanged(object sender, UpdateStatus status)
         {
             DebugWrite.Line(status.ToString());
 
             btnCheck.Enabled = status == UpdateStatus.Idle;
+            btnDownload.Enabled = btnUpdate.Enabled = btnCheck.Enabled;
 
             switch (status)
             {
@@ -218,7 +226,7 @@ namespace Updater
                 InProgress = false;
             }
         }
-        
+
         private async void DoDownload()
         {
             DebugWrite.Line("start");
